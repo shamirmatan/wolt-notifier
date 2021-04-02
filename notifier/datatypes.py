@@ -36,17 +36,14 @@ class Restaurant:
         return json.loads(x.text)["results"]
 
     def _is_target_restaurant(self, restaurant: str) -> bool:
-        if self.name in restaurant["value"].get("name")[0]["value"]:
-            return True
-        return False
-        # return restaurant["value"].get("name")[0]["value"] == self.name
+        return restaurant["value"].get("name")[0]["value"] in self.name
 
-    def _get_restaurant(self, restaurant: str) -> Dict:
-        location = Restaurant._get_my_location()
+    def _get_restaurant(self, restaurant: str, location: dict) -> Dict:
         optional_rests = self._search_restaurant(restaurant, *location)
         for rest in optional_rests:
             if self._is_target_restaurant(rest):
                 return rest["value"]
 
     def is_online(self) -> bool:
-        return self._get_restaurant(self.name)["online"]
+        location = Restaurant._get_my_location()
+        return self._get_restaurant(self.name, location)["online"]
